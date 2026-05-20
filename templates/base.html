@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FitMeal Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<header class="hero">
+    <nav>
+        <a href="{{ url_for('index') }}">FitMeal Planner</a>
+        <a href="{{ url_for('logs') }}">Daily log</a>
+    </nav>
+    <div>
+        <h1>FitMeal Planner</h1>
+        <p>Search foods, create meals, and track calories and macronutrients.</p>
+    </div>
+</header>
+<main class="container">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

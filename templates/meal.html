@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+    <h2>{{ meal.name }} <span class="muted">({{ meal.meal_type }})</span></h2>
+    <p class="totals">{{ meal.calories|round1 }} kcal · {{ meal.protein|round1 }}g protein · {{ meal.carbs|round1 }}g carbs · {{ meal.fats|round1 }}g fat</p>
+</section>
+
+<section class="grid two-cols">
+    <div class="card">
+        <h2>Add food</h2>
+        <form method="post" action="{{ url_for('add_meal_item', meal_id=meal.meal_id) }}" class="stacked-form">
+            <label>Food
+                <select name="food_id">
+                {% for food in foods %}<option value="{{ food.food_id }}">{{ food.name }}</option>{% endfor %}
+                </select>
+            </label>
+            <label>Quantity in grams <input type="number" name="quantity_grams" min="1" step="0.1" value="100" required></label>
+            <button type="submit">Add food</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Meal items</h2>
+        <table>
+            <thead><tr><th>Food</th><th>g</th><th>kcal</th><th>P</th><th>C</th><th>F</th><th></th></tr></thead>
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.quantity_grams|round1 }}</td>
+                    <td>{{ item.item_calories|round1 }}</td>
+                    <td>{{ item.item_protein|round1 }}</td>
+                    <td>{{ item.item_carbs|round1 }}</td>
+                    <td>{{ item.item_fats|round1 }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('delete_meal_item', meal_item_id=item.meal_item_id) }}">
+                            <button class="link-button" type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

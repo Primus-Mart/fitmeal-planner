@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="grid two-cols">
+    <div class="card">
+        <h2>Food search</h2>
+        <p class="muted">Regex parser examples: <code>chicken protein>=20</code>, <code>calories&lt;200 fats&lt;5</code>.</p>
+        <form method="get" action="{{ url_for('index') }}" class="inline-form">
+            <input name="q" value="{{ q }}" placeholder="Search food or macro filters">
+            <button type="submit">Search</button>
+        </form>
+        {% if parse_error %}<p class="error">{{ parse_error }}</p>{% endif %}
+        {% if q %}
+            <p class="muted">Parsed name: <strong>{{ name_term or 'none' }}</strong>. Parsed filters:
+                {% if filters %}
+                    {% for f in filters %}<code>{{ f.field }}{{ f.op }}{{ f.value }}</code>{% endfor %}
+                {% else %}none{% endif %}
+            </p>
+        {% endif %}
+        <table>
+            <thead><tr><th>Food</th><th>kcal</th><th>P</th><th>C</th><th>F</th></tr></thead>
+            <tbody>
+            {% for food in foods %}
+                <tr>
+                    <td>{{ food.name }}</td>
+                    <td>{{ food.calories|round1 }}</td>
+                    <td>{{ food.protein|round1 }}</td>
+                    <td>{{ food.carbs|round1 }}</td>
+                    <td>{{ food.fats|round1 }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>Create meal</h2>
+        <form method="post" action="{{ url_for('create_meal') }}" class="stacked-form">
+            <input type="hidden" name="user_id" value="1">
+            <label>Meal name <input name="name" required placeholder="e.g. Post-workout dinner"></label>
+            <label>Meal type
+                <select name="meal_type">
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                    <option value="snack">Snack</option>
+                    <option value="other">Other</option>
+                </select>
+            </label>
+            <button type="submit">Create meal</button>
+        </form>
+    </div>
+</section>
+
+<section class="card">
+    <h2>Meals</h2>
+    <table>
+        <thead><tr><th>Name</th><th>Type</th><th>kcal</th><th>Protein</th><th>Carbs</th><th>Fat</th></tr></thead>
+        <tbody>
+        {% for meal in meals %}
+            <tr>
+                <td><a href="{{ url_for('meal_detail', meal_id=meal.meal_id) }}">{{ meal.name }}</a></td>
+                <td>{{ meal.meal_type }}</td>
+                <td>{{ meal.calories|round1 }}</td>
+                <td>{{ meal.protein|round1 }}</td>
+                <td>{{ meal.carbs|round1 }}</td>
+                <td>{{ meal.fats|round1 }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="card">
+    <h2>Recent daily logs</h2>
+    <table>
+        <thead><tr><th>Date</th><th>kcal</th><th>Target</th><th>Protein</th><th>Carbs</th><th>Fat</th></tr></thead>
+        <tbody>
+        {% for log in logs %}
+            <tr>
+                <td>{{ log.log_date }}</td>
+                <td>{{ log.total_calories|round1 }}</td>
+                <td>{{ log.calorie_target }}</td>
+                <td>{{ log.total_protein|round1 }}</td>
+                <td>{{ log.total_carbs|round1 }}</td>
+                <td>{{ log.total_fats|round1 }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
