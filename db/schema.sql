@@ -16,12 +16,15 @@ CREATE TABLE app_user (
 
 CREATE TABLE food (
     food_id SERIAL PRIMARY KEY,
+    source_food_id VARCHAR(50),
     name VARCHAR(200) NOT NULL UNIQUE,
     calories NUMERIC(8,2) NOT NULL CHECK (calories >= 0),
-    protein NUMERIC(8,2) NOT NULL DEFAULT 0 CHECK (protein >= 0),
-    carbs NUMERIC(8,2) NOT NULL DEFAULT 0 CHECK (carbs >= 0),
-    fats NUMERIC(8,2) NOT NULL DEFAULT 0 CHECK (fats >= 0),
-    source VARCHAR(100) DEFAULT 'sample nutrition data'
+    protein NUMERIC(8,2) NOT NULL CHECK (protein >= 0),
+    carbs NUMERIC(8,2) NOT NULL CHECK (carbs >= 0),
+    fats NUMERIC(8,2) NOT NULL CHECK (fats >= 0),
+    source VARCHAR(150) DEFAULT 'Frida Food Data, DTU National Food Institute'
+);
+    
 );
 
 CREATE INDEX idx_food_name_lower ON food (LOWER(name));
